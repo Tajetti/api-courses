@@ -15,4 +15,6 @@ public interface RepositoryCurso extends JpaRepository<Curso, UUID>{
     List<Curso> findByNameContainingIgnoreCase(String name);
     List<Curso> findByCategoryContainingIgnoreCase(String category);
     List<Curso> findByNameContainingIgnoreCaseAndCategoryContainingIgnoreCase(String name, String category);
+
+    Optional<Curso> findById(UUID id);
 }
