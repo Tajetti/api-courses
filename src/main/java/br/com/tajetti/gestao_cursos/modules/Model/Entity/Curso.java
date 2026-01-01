@@ -27,6 +27,9 @@ public class Curso {
     private String category;
     
     private Boolean active = true;
+
+    @NotBlank(message= "O campo professor deve ser preenchido!")
+    private String professor;
     
     @CreationTimestamp
     private LocalDateTime created_at;

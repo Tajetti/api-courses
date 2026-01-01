@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.tajetti.gestao_cursos.modules.Exception.CursoEncontradoException;
+import br.com.tajetti.gestao_cursos.modules.Exception.CursoNaoEncontradoException;
 import br.com.tajetti.gestao_cursos.modules.Model.Entity.Curso;
 import br.com.tajetti.gestao_cursos.modules.Model.Repository.RepositoryCurso;
 
@@ -45,7 +46,7 @@ public class ServiceCurso {
 
     public Curso atualizar(UUID id, Curso curso) {
         var existente = this.repository.findById(id).orElseThrow(() -> {
-            return new RuntimeException("O curso com o id" + id + " não foi encontrado!");
+            throw new CursoNaoEncontradoException("Curso não encontrado!");
         });
 
         if(curso.getName() != null) {
@@ -56,6 +57,33 @@ public class ServiceCurso {
             existente.setCategory(curso.getCategory());
         }
 
+        if(curso.getProfessor() != null) {
+            existente.setProfessor(curso.getProfessor());
+        } 
+
         return this.repository.save(existente);
+    }
+
+    public Curso deletar(UUID id) {
+        var existente = this.repository.findById(id).orElseThrow(() -> {
+            throw new CursoNaoEncontradoException("Curso não encontrado!");
+        });
+
+        this.repository.delete(existente);
+        return existente;
+    }
+
+    public Curso toggle(UUID id){
+        var cursoDB = this.repository.findById(id).orElseThrow(() -> {
+            throw new CursoNaoEncontradoException("Curso não encontrado!");
+        });
+
+        if(cursoDB.getActive()){
+            cursoDB.setActive(false);
+        } else {
+            cursoDB.setActive(true);
+        }
+
+        return this.repository.save(cursoDB);
     }
 }
